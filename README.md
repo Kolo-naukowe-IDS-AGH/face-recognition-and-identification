@@ -1,1 +1,1 @@
-# face-recognition-and-identification
+# Face recognition and identification
