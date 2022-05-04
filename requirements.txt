@@ -1,0 +1,8 @@
+certifi==2021.10.8
+greenlet==1.1.2
+mysql-connector-python==8.0.29
+mysqlclient==2.1.0
+protobuf==3.20.1
+PyMySQL==1.0.2
+SQLAlchemy==1.4.36
+wincertstore==0.2
