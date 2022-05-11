@@ -1,23 +1,23 @@
-import pandas as pd
-import os
-import matplotlib.pyplot as plt
 import cv2
-import numpy as np
 import dlib
+import numpy as np
+
 
 def normalise(X):
-    '''
+    """
     Makes the faces straight.
 
 
     Parameters:
         X (numpy.ndarray)
 
-    '''
+    """
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+    X_returned = []
 
     for image in X:
+
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         rects = detector(gray, 1)
         for rect in rects:
@@ -36,9 +36,14 @@ def normalise(X):
             dX = rightEyeCenter[0] - leftEyeCenter[0]
             angle = np.degrees(np.arctan2(dY, dX))
 
-            for i, (x, y) in enumerate([leftEyeCenter, rightEyeCenter]):
-                cv2.circle(image, (x, y), 1, (0, 0, 255), -1)
+            (h, w) = image.shape[:2]
 
-            cv2.imshow(image)
-            print(dX, " ", dY)
-            print(angle)
+            eyesCenter = ((leftEyeCenter[0] + rightEyeCenter[0]) // 2,
+                          (leftEyeCenter[1] + rightEyeCenter[1]) // 2)
+
+            M = cv2.getRotationMatrix2D(eyesCenter, angle, 1)
+
+            rotated = cv2.warpAffine(image, M, (w, h))
+
+            X_returned.append(rotated)
+    return X_returned
