@@ -6,3 +6,6 @@ protobuf==3.20.1
 PyMySQL==1.0.2
 SQLAlchemy==1.4.36
 wincertstore==0.2
+numpy==1.22.3
+numpy-base=1.22.3
+dlib==19.24.0

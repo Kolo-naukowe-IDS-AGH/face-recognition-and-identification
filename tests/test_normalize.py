@@ -1,30 +1,28 @@
-import pytest
-from normalize import normalise
 import os
 import cv2
-import matplotlib.pyplot as plt
-import numpy as np
 import dlib
+import numpy as np
+
+from normalize import normalise
 
 
 def test_for_straight_face():
-    path = "./Pod"
+    path = '../TwarzeDoTestow'
     people = os.listdir(path)
     X = []
+
     for person in people:
         print(os.path.join(path, person))
         for name in os.listdir(os.path.join(path, person)):
             file_name = name
         img = cv2.imread(os.path.join(path, person, file_name))
-        plt.imshow(img)
         X.append(img)
 
     X = np.array(X)
-
     X_normalized = normalise(X)
 
     detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
+    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
     for image in X_normalized:
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -45,5 +43,7 @@ def test_for_straight_face():
             dX = rightEyeCenter[0] - leftEyeCenter[0]
             angle = np.degrees(np.arctan2(dY, dX))
 
-            assert angle==0
+            assert np.abs(angle)<10, "The angle between eyes is {0}".format(angle)
+            print(np.abs(angle))
+
 
