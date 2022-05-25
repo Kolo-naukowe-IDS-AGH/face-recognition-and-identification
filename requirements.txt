@@ -9,3 +9,5 @@ wincertstore==0.2
 numpy==1.22.3
 numpy-base=1.22.3
 dlib==19.24.0
+opencv==4.5.5
+pytest==7.1.1

@@ -3,28 +3,23 @@ import cv2
 import dlib
 import numpy as np
 
-from normalize import normalise
+from normalize import normalize, create_array
 
 
 def test_for_straight_face():
-    path = '../TwarzeDoTestow'
-    people = os.listdir(path)
-    X = []
+    X = create_array('../TwarzeDoTestow/dataset1')
 
-    for person in people:
-        print(os.path.join(path, person))
-        for name in os.listdir(os.path.join(path, person)):
-            file_name = name
-        img = cv2.imread(os.path.join(path, person, file_name))
-        X.append(img)
+    img=X[0]
 
-    X = np.array(X)
-    X_normalized = normalise(X)
+    X_normalized = normalize(X)
+    img_normalized = normalize(img)
+
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
-    for image in X_normalized:
+    for image in [*X_normalized, img_normalized]:
+
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         rects = detector(gray, 1)
         for rect in rects:
@@ -42,8 +37,9 @@ def test_for_straight_face():
             dY = rightEyeCenter[1] - leftEyeCenter[1]
             dX = rightEyeCenter[0] - leftEyeCenter[0]
             angle = np.degrees(np.arctan2(dY, dX))
+            print(angle)
 
             assert np.abs(angle)<10, "The angle between eyes is {0}".format(angle)
-            print(np.abs(angle))
+
 
 
